@@ -458,7 +458,7 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
                         nfcAdapter.enableForegroundDispatch(getActivity(), getPendingIntent(), getIntentFilters(), getTechLists());
 
                         if (p2pMessage != null) {
-                            // christian testing nfcAdapter.setNdefPushMessage(p2pMessage, getActivity());
+                            // christian: fixing MABS10 compilation--> nfcAdapter.setNdefPushMessage(p2pMessage, getActivity());
                         }
                     } catch (IllegalStateException e) {
                         // issue 110 - user exits app with home button while nfc is initializing
@@ -497,12 +497,12 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
 
                 if (nfcAdapter == null) {
                     callbackContext.error(STATUS_NO_NFC);
-                } else if (!nfcAdapter.isNdefPushEnabled()) {
-                    callbackContext.error(STATUS_NDEF_PUSH_DISABLED);
+                // christian --> } else if (!nfcAdapter.isNdefPushEnabled()) {
+                // christian -->     callbackContext.error(STATUS_NDEF_PUSH_DISABLED);
                 } else {
-                    nfcAdapter.setOnNdefPushCompleteCallback(NfcPlugin.this, getActivity());
+                    // christian.  Fixing MABS10 compilation --> nfcAdapter.setOnNdefPushCompleteCallback(NfcPlugin.this, getActivity());
                     try {
-                        nfcAdapter.setBeamPushUris(uris, getActivity());
+                        // christian.  Fixing MABS10 compilation --> nfcAdapter.setBeamPushUris(uris, getActivity());
 
                         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
                         result.setKeepCallback(true);
@@ -525,11 +525,11 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
 
                 if (nfcAdapter == null) {
                     callbackContext.error(STATUS_NO_NFC);
-                } else if (!nfcAdapter.isNdefPushEnabled()) {
-                    callbackContext.error(STATUS_NDEF_PUSH_DISABLED);
+                // christian --> } else if (!nfcAdapter.isNdefPushEnabled()) {
+                // christian -->     callbackContext.error(STATUS_NDEF_PUSH_DISABLED);
                 } else {
-                    nfcAdapter.setNdefPushMessage(p2pMessage, getActivity());
-                    nfcAdapter.setOnNdefPushCompleteCallback(NfcPlugin.this, getActivity());
+                    // christian.  Fixing MABS10 compilation --> nfcAdapter.setNdefPushMessage(p2pMessage, getActivity());
+                    // christian.  Fixing MABS10 compilation --> nfcAdapter.setOnNdefPushCompleteCallback(NfcPlugin.this, getActivity());
 
                     PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
                     result.setKeepCallback(true);
@@ -547,7 +547,7 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
                 NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
                 if (nfcAdapter != null) {
-                    nfcAdapter.setNdefPushMessage(null, getActivity());
+                    // christian - fixing MABS10 compilation --> nfcAdapter.setNdefPushMessage(null, getActivity());
                 }
 
             }
@@ -561,7 +561,7 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
                 NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
                 if (nfcAdapter != null) {
-                    nfcAdapter.setBeamPushUris(null, getActivity());
+                    // christian.  Fixing MABS10 compilation --> nfcAdapter.setBeamPushUris(null, getActivity());
                 }
 
             }
