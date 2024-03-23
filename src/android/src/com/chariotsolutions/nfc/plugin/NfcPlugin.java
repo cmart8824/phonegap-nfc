@@ -77,7 +77,7 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 
-        Log.d(TAG, "execute " + action);
+        Log.d(TAG, "execute " + action + " >> " + callbackContext);
 
         // showSettings can be called if NFC is disabled
         // might want to skip this if NO_NFC
@@ -458,7 +458,7 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
                         nfcAdapter.enableForegroundDispatch(getActivity(), getPendingIntent(), getIntentFilters(), getTechLists());
 
                         if (p2pMessage != null) {
-                            // christian: fixing MABS10 compilation--> nfcAdapter.setNdefPushMessage(p2pMessage, getActivity());
+                            nfcAdapter.setNdefPushMessage(p2pMessage, getActivity());
                         }
                     } catch (IllegalStateException e) {
                         // issue 110 - user exits app with home button while nfc is initializing
@@ -497,12 +497,12 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
 
                 if (nfcAdapter == null) {
                     callbackContext.error(STATUS_NO_NFC);
-                // christian --> } else if (!nfcAdapter.isNdefPushEnabled()) {
-                // christian -->     callbackContext.error(STATUS_NDEF_PUSH_DISABLED);
+                } else if (!nfcAdapter.isNdefPushEnabled()) {
+                    callbackContext.error(STATUS_NDEF_PUSH_DISABLED);
                 } else {
-                    // christian.  Fixing MABS10 compilation --> nfcAdapter.setOnNdefPushCompleteCallback(NfcPlugin.this, getActivity());
+                    nfcAdapter.setOnNdefPushCompleteCallback(NfcPlugin.this, getActivity());
                     try {
-                        // christian.  Fixing MABS10 compilation --> nfcAdapter.setBeamPushUris(uris, getActivity());
+                        nfcAdapter.setBeamPushUris(uris, getActivity());
 
                         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
                         result.setKeepCallback(true);
@@ -525,11 +525,11 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
 
                 if (nfcAdapter == null) {
                     callbackContext.error(STATUS_NO_NFC);
-                // christian --> } else if (!nfcAdapter.isNdefPushEnabled()) {
-                // christian -->     callbackContext.error(STATUS_NDEF_PUSH_DISABLED);
+                } else if (!nfcAdapter.isNdefPushEnabled()) {
+                    callbackContext.error(STATUS_NDEF_PUSH_DISABLED);
                 } else {
-                    // christian.  Fixing MABS10 compilation --> nfcAdapter.setNdefPushMessage(p2pMessage, getActivity());
-                    // christian.  Fixing MABS10 compilation --> nfcAdapter.setOnNdefPushCompleteCallback(NfcPlugin.this, getActivity());
+                    nfcAdapter.setNdefPushMessage(p2pMessage, getActivity());
+                    nfcAdapter.setOnNdefPushCompleteCallback(NfcPlugin.this, getActivity());
 
                     PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
                     result.setKeepCallback(true);
@@ -547,7 +547,7 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
                 NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
                 if (nfcAdapter != null) {
-                    // christian - fixing MABS10 compilation --> nfcAdapter.setNdefPushMessage(null, getActivity());
+                    nfcAdapter.setNdefPushMessage(null, getActivity());
                 }
 
             }
@@ -561,7 +561,7 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
                 NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
 
                 if (nfcAdapter != null) {
-                    // christian.  Fixing MABS10 compilation --> nfcAdapter.setBeamPushUris(null, getActivity());
+                    nfcAdapter.setBeamPushUris(null, getActivity());
                 }
 
             }
@@ -684,7 +684,7 @@ public class NfcPlugin extends CordovaPlugin implements NfcAdapter.OnNdefPushCom
     private void fireTagEvent (Tag tag) {
 
         String command = MessageFormat.format(javaScriptEventTemplate, TAG_DEFAULT, Util.tagToJSON(tag));
-        Log.v(TAG, command);
+        Log.d(TAG, command);
         this.webView.sendJavascript(command);
     }
 
